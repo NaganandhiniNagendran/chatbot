@@ -1,1 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOGIN</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e6ecf0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #1DA1F2;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 14px;
+            color: #657786;
+        }
+        .form-group input {
+            width: 90%;
+            padding: 15px;
+            border: 1px solid #ccd6dd;
+            border-radius: 30px;
+            font-size: 18px;
+            color: #14171a;
+            margin-top: 5px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1DA1F2;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #1991db;
+        }
+        .form-group a {
+            font-size: 14px;
+            color: #1DA1F2;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+        .form-group a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        // Predefined users for authentication (Replace this with backend authentication in real-world use)
+        const users = {
+            "user1@example.com": { "password": "password123" },
+            "user2@example.com": { "password": "mypassword" },
+            "admin@example.com": { "password": "adminpass" },
+            "guest@example.com": { "password": "guestpass" }
+        };
 
+        function validateSignIn(event) {
+            event.preventDefault(); // Prevent form submission
+
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            // Check if user exists in the users object
+            if (users[email] && users[email].password === password) {
+                alert("Login successful! Redirecting...");
+                window.location.href = "dashboard.html"; // Redirect to dashboard
+            } else {
+                alert("Invalid email or password. Please try again.");
+            }
+        }
+
+        function showSignUp() {
+            document.getElementById("signin-container").style.display = "none";
+            document.getElementById("signup-container").style.display = "block";
+        }
+
+        function showSignIn() {
+            document.getElementById("signup-container").style.display = "none";
+            document.getElementById("signin-container").style.display = "block";
+        }
+
+        function showForgotPassword() {
+            document.getElementById("signin-container").style.display = "none";
+            document.getElementById("forgot-password-container").style.display = "block";
+        }
+
+        function showSignInFromForgot() {
+            document.getElementById("forgot-password-container").style.display = "none";
+            document.getElementById("signin-container").style.display = "block";
+        }
+
+        function handleCredentialResponse(response) {
+            const responsePayload = parseJwt(response.credential);
+            alert(`Logged in as: ${responsePayload.name} (${responsePayload.email})`);
+            window.location.href = "dashboard.html"; // Redirect to dashboard
+        }
+
+        function parseJwt(token) {
+            let base64Url = token.split('.')[1];
+            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+    </script>
+</head>
+<body>
+
+<!-- Sign In Page -->
+<div id="signin-container" class="container">
+    <h2><CENTER>Log In</CENTER></h2>
+    <form onsubmit="validateSignIn(event)">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+        </div>
+        <div class="form-group">
+            <button type="submit">Sign In</button>
+        </div>
+        <div class="form-group">
+            <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+        </div>
+        <div class="form-group">
+            <a href="#" onclick="showSignUp()">Don't have an account? Sign Up</a>
+        </div>
+        <div class="form-group">
+            <div id="g_id_onload"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin" data-type="standard"></div>
+        </div>
+    </form>
+</div>
+
+<!-- Sign Up Page -->
+<div id="signup-container" class="container" style="display: none;">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="POST">
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" name="firstname" required placeholder="Enter your first name">
+        </div>
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" name="lastname" required placeholder="Enter your last name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+        </div>
+        <div class="form-group">
+            <button type="submit">Sign Up</button>
+        </div>
+        <div class="form-group">
+            <a href="#" onclick="showSignIn()">Already have an account? Sign In</a>
+        </div>
+    </form>
+</div>
+
+<!-- Forgot Password Page -->
+<div id="forgot-password-container" class="container" style="display: none;">
+    <h2>Forgot Password</h2>
+    <form action="/send-reset-link" method="POST">
+        <div class="form-group">
+            <label for="email">Enter your email address</label>
+            <input type="email" id="email" name="email" required placeholder="Email address">
+        </div>
+        <div class="form-group">
+            <button type="submit">Send Reset Link</button>
+        </div>
+        <div class="form-group">
+            <a href="#" onclick="showSignInFromForgot()">Back to Sign In</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

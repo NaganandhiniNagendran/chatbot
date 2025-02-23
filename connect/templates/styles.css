@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e6ecf0;
+    text-align: center;
+  }
+  
+  .container {
+    background: white;
+    padding: 20px;
+    margin: 50px auto;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1da1f2;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #1991db;
+  }
+  
+  .chat-box {
+    border: 1px solid #ccc;
+    height: 300px;
+    overflow-y: scroll;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
